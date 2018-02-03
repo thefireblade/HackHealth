@@ -71,8 +71,8 @@ def index():
 						print returntext
 
 						interface.messageFB(returntext,sender)
-					elif sender:
-						interface.messageFB("(y)",sender)
+				elif sender:
+					interface.messageFB("(y)",sender)
 		elif "source" in data:
 			ifttthadler()
 
