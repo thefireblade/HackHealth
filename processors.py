@@ -1,7 +1,6 @@
-from dbaccess import AuthDatabase
 
 class Processors:
-	
+
 	def __init__(self):
 		pass
 
@@ -10,4 +9,4 @@ class Processors:
 
 	def storeData(self, textIn):
 		if(textIn == "Log"):
-			pass
+			addLog()

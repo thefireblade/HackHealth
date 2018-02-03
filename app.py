@@ -22,7 +22,8 @@ def index():
 	data = None
 
 	if request:
-
+		print request.data
+		print request.form
 		if request.data:
 			data = json.loads(request.data)
 		elif request.form:
@@ -42,12 +43,12 @@ def index():
 				if msgtext and sender:
 					print "Received " + msgtext + " from " + sender
 					if(msgtext == "show me the way"):
-						interface.messageFB("The total calorie count for today is :" + calculateTotalCalorie(sender))
+						interface.messageFB("The total calorie count for today is : " + str(calculateTotalCalorie(sender)) +  " calories", sender)
+						interface.messageFB("You are " + str(round(calculateTotalCalorie(sender)/db.getCalorieTarget(sender)* 100, 2)) + "%" +
+						 " to your calorie target", sender )
 					else:
 
 						state = db.getUserState(sender)
-						interface.messageFB(state, sender)
-						print state
 						if(state == -1):
 							db.addUser(sender, 1)
 							interface.messageFB("Hi, what is your weight?", sender)
@@ -71,7 +72,7 @@ def index():
 				elif sender:
 					interface.messageFB("(y)",sender)
 		elif "source" in data:
-			ifttthadler()
+			ifttthandler()
 
 
 	return ""
@@ -80,7 +81,7 @@ def ifttthandler():
 	interface.broadcast("I got ifttt data!")
 
 def calculateTotalCalorie(sender):
-	output = self._execute("SELECT calorieCount FROM FoodData WHERE transactionDate = ?",(dateime.now().date().strftime('%m%d%Y'),))
+	output = interface.database._execute("SELECT calorieCount FROM FoodData WHERE transactionDate = ?",(datetime.now().date().strftime('%m%d%Y'),))
 	return sum([row[0] for row in output])
 
 

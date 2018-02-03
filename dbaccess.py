@@ -15,8 +15,12 @@ class AuthDatabase(Database):
 			return output[0][0]
 	def setUserState(self, userid, state):
 		self._execute("UPDATE Users SET state = ? WHERE userid = ?", (state, userid))
-	def getCalorieTarget(self, calorieTarget):
-		pass
+	def getCalorieTarget(self, userid):
+		output = self._execute("SELECT calorieTarget FROM Users WHERE userid = ?",(userid,))
+		if(len(output) == 0):
+			return -1
+		else:
+			return output[0][0]
 	def setCalorieTarget(self, userid, calorieTarget):
 		self._execute("UPDATE Users SET calorieTarget = ? WHERE userid = ?", (calorieTarget, userid,))
 	def getCurrentWeight(self, userid):
