@@ -1,5 +1,6 @@
 import flask
 import json
+from datetime import datetime
 from flask import Flask, request, Response
 from interface import Interface
 from processors import Processors
@@ -40,12 +41,25 @@ def index():
 						db.addUser(sender, 1)
 						interface.messageFB("Hi, what is your weight?", sender)
 					elif state == 1:
-						
-						interface.messageFB("You are already in the database.", sender)
+						db.setUserState(sender, 2)
+						db.setWeight(sender, msgtext)
+						interface.messageFB("What is your calorie target everyday?", sender)
+					elif state == 2:
+						db.setUserState(sender, 3)
+						db.setCalorieTarget(sender, msgtext)
+						interface.messageFB("The data is imported!", sender)
+					elif state == 3:
+						db.setUserState(sender, 4)
+						interface.messageFB("Hi, welcome back. Enter the calorie count for your meal:")
+					else:
+						db.setUserState(sender, 3)
+						db.addLog(sender, datetime.now().time(),msgtext)
+						db.setLastTransaction(sender, datetime.now().time())
+						interface.messageFB("Food data was logged successfully! See you again next time.")
 
 
 					db.addLog(1,"hi",3)
-
+					if()
 					returntext = processor.echo(msgtext)
 					print returntext
 
@@ -56,6 +70,10 @@ def index():
 
 	return ""
 
+
+def calculateTotalCalorie(sender) 
+	output = self._execute("SELECT calorieCount FROM FoodData WHERE transactionDate = ?",(dateime.now().day,))
+	return sum([row[0] for row in output])
 
 
 def main():
