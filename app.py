@@ -59,7 +59,6 @@ def index():
 
 
 					db.addLog(1,"hi",3)
-					if()
 					returntext = processor.echo(msgtext)
 					print returntext
 
