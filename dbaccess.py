@@ -11,9 +11,8 @@ class AuthDatabase(Database):
 		output = self._execute("SELECT state FROM Users WHERE userid = ?",(userid,))
 		if(len(output) == 0):
 			return -1
-		else 
-			return output[0]
-	def 
-
+		else:
+			return output[0][0]
+	
 
 

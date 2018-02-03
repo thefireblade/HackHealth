@@ -4,12 +4,12 @@ from flask import Flask, request, Response
 from interface import Interface
 from processors import Processors
 
-db = interface.database
 
 app = Flask(__name__)
 interface = Interface()
 processor = Processors()
 
+db = interface.database
 with open("config.json") as config_file:    
 	config = json.load(config_file)
 

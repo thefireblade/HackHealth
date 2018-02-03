@@ -10,3 +10,4 @@ class Processors:
 
 	def storeData(self, textIn):
 		if(textIn == "Log"):
+			pass
