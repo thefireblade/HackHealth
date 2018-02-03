@@ -34,7 +34,7 @@ def index():
 
 				if msgtext and sender:
 					print "Received " + msgtext + " from " + sender
-					if(msgtext = "show me the way"):
+					if(msgtext == "show me the way"):
 						interface.messageFB("The total calorie count for today is :" + calculateTotalCalorie(sender))
 					else:
 						state = db.getUserState(sender)
@@ -65,7 +65,7 @@ def index():
 						print returntext
 
 						interface.messageFB(returntext,sender)
-					elif sender:
+						elif sender:
 						interface.messageFB("(y)",sender)
 
 
