@@ -6,3 +6,7 @@ class Processors:
 
 	def echo(self,textIn):
 		return "You said: " + textIn
+
+	def storeData(self, textIn):
+		if(textIn == "Log"):
+			
