@@ -29,3 +29,6 @@ class AuthDatabase(Database):
 		return output[0][0]
 	def setLastTransaction(self, userid, lastTransaction):
 		self._execute("UPDATE Users SET lastTransaction = ? WHERE userid = ?", (lastTransaction, userid,))
+
+	def getAllUsers(self):
+		return self._execute("SELECT userid FROM Users")

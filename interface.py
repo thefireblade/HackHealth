@@ -45,4 +45,10 @@ class Interface:
 			}
 		}
 		return requests.post('https://graph.facebook.com/v2.6/me/messages?access_token='+self.config["fb_token"], headers=headers, data=json.dumps(data))
+
+	def broadcast(self,text):
+		users = self.database.getAllUsers()
+		for user in users:
+			self.messageFB(text,user[0])
+			
 	

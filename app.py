@@ -80,7 +80,7 @@ def index():
 	return ""
 
 def ifttthandler():
-	interface.messageFB("I got ifttt data!")
+	interface.broadcast("I got ifttt data!")
 
 def calculateTotalCalorie(sender):
 	output = self._execute("SELECT calorieCount FROM FoodData WHERE transactionDate = ?",(dateime.now().date().strftime('%m%d%Y'),))
