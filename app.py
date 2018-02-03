@@ -86,9 +86,15 @@ def ifttthandler():
 
 
 def total(sender):
-	interface.messageFB("The total calorie count for today is : " + str(calculateTotalCalorie(sender)) +  " calories", sender)
-	interface.messageFB("You are " + str(round(calculateTotalCalorie(sender)/db.getCalorieTarget(sender)* 100, 2)) + "%" +
-	 " to your calorie target", sender )
+	calories = str(calculateTotalCalorie(sender))
+	target = db.getCalorieTarget(sender)
+	interface.messageFB("The total calorie count for today is : " + calories +  " calories", sender)
+	interface.messageFB("You ate " + str(round(calories/target* 100, 2)) + "%" +
+	 " of your calorie target", sender )
+	net = calories - target
+	diff = "gained" if net > 0 else "loss"
+	net = net * -1 if net < 0
+	interface.messageFB("You " + diff + " a net of " + str(net) + " calories today. That's " + str(net/3500.0) + "pounds")
 
 def calculateTotalCalorie(sender):
 	output = interface.database._execute("SELECT calorieCount FROM FoodData WHERE transactionDate = ?",(datetime.now().date().strftime('%m%d%Y'),))
