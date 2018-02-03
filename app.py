@@ -10,6 +10,8 @@ app = Flask(__name__)
 interface = Interface()
 processor = Processors()
 
+
+
 db = interface.database
 with open("config.json") as config_file:
 	config = json.load(config_file)
@@ -43,9 +45,7 @@ def index():
 				if msgtext and sender:
 					print "Received " + msgtext + " from " + sender
 					if(msgtext == "show me the way"):
-						interface.messageFB("The total calorie count for today is : " + str(calculateTotalCalorie(sender)) +  " calories", sender)
-						interface.messageFB("You are " + str(round(calculateTotalCalorie(sender)/db.getCalorieTarget(sender)* 100, 2)) + "%" +
-						 " to your calorie target", sender )
+						total(sender)
 					else:
 
 						state = db.getUserState(sender)
@@ -78,7 +78,17 @@ def index():
 	return ""
 
 def ifttthandler():
-	interface.broadcast("I got ifttt data!")
+
+	users = interface.database.getAllUsers()
+	for user in users:
+		interface.messageFB("Time for your nightly checkin",user[0])
+		total(user[0])
+
+
+def total(sender):
+	interface.messageFB("The total calorie count for today is : " + str(calculateTotalCalorie(sender)) +  " calories", sender)
+	interface.messageFB("You are " + str(round(calculateTotalCalorie(sender)/db.getCalorieTarget(sender)* 100, 2)) + "%" +
+	 " to your calorie target", sender )
 
 def calculateTotalCalorie(sender):
 	output = interface.database._execute("SELECT calorieCount FROM FoodData WHERE transactionDate = ?",(datetime.now().date().strftime('%m%d%Y'),))
