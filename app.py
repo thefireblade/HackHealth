@@ -4,6 +4,8 @@ from flask import Flask, request, Response
 from interface import Interface
 from processors import Processors
 
+db = interface.database
+
 app = Flask(__name__)
 interface = Interface()
 processor = Processors()
@@ -16,7 +18,6 @@ def index():
 	if "hub.challenge" in request.args:
 		response = str(request.args["hub.challenge"])
 		return response
-
 	data = None
 	if request.data:
 		data = json.loads(request.data)
@@ -33,7 +34,17 @@ def index():
 				if msgtext and sender:
 					print "Received " + msgtext + " from " + sender
 
-					interface.database.addLog(1,"hi",3)
+					state = db.getUserState(sender)
+
+					if(state == -1):
+						db.addUser(sender, 1)
+						interface.messageFB("Hi, what is your weight?", sender)
+					elif state == 1:
+						
+						interface.messageFB("You are already in the database.", sender)
+
+
+					db.addLog(1,"hi",3)
 
 					returntext = processor.echo(msgtext)
 					print returntext

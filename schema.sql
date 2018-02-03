@@ -1,9 +1,9 @@
 CREATE TABLE Users(
    userId INTEGER PRIMARY KEY,
-   name VARCHAR(50),
    calorieTarget INTEGER,
    currentWeight INTEGER,
-   lastTransaction VARCHAR(19)
+   lastTransaction VARCHAR(19),
+   state INTEGER
   );
 
 CREATE TABLE FoodData(
