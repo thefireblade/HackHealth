@@ -68,9 +68,6 @@ def index():
 							db.addLog(sender, datetime.now().date().strftime('%m%d%Y'),msgtext)
 							db.setLastTransaction(sender, datetime.now().time().strftime('%H:%M:%S'))
 							interface.messageFB("Food data was logged successfully! See you again next time.", sender)
-						print returntext
-
-						interface.messageFB(returntext,sender)
 				elif sender:
 					interface.messageFB("(y)",sender)
 		elif "source" in data:
