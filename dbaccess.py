@@ -9,22 +9,22 @@ class AuthDatabase(Database):
 		self._execute("INSERT INTO Users(userId, state) VALUES(?,?);",(userid, state))
 	def getUserState(self, userid):
 		output = self._execute("SELECT state FROM Users WHERE userid = ?",(userid,))
-	def setUserState(self, state):
-		self._execute("UPDATE Users SET userId = self WHERE state = 1)
+	def setUserState(self, userid, state):
+		self._execute("UPDATE Users SET state = ? WHERE userid = ?", (state, ))
 	def getCalorieTarget(self, calorieTarget):
 		if(len(output) == 0):
 			return -1
 		else:
 			return output[0][0]
-	def setCalorieTarget(self, state):
-		self._execute("UPDATE Users SET calorieTarget = self WHERE state = 2")
-	def getCurrentWeight(self, userId):
-		output = self._execute("SELECT currentWeight FROM Users WHERE userid= ?", (currentWeight,))
+	def setCalorieTarget(self, userid, calorieTarget):
+		self._execute("UPDATE Users SET calorieTarget = ? WHERE userid = ?", (calorieTarget, userid,))
+	def getCurrentWeight(self, userid):
+		output = self._execute("SELECT currentWeight FROM Users WHERE userid= ?", (userid,))
 		return output[0][0]
-	def setCurrentWeight(self, state):
-		self._execute("UPDATE Users SET currentWeight = self WHERE state = 3")
-	def getLastTransaction(self, lastTransaction):
-		output = self._execute("SELECT lastTransaction FROM Users WHERE lastTransaction = ?", (lastTransaction,))
+	def setCurrentWeight(self, userid, currentWeight):
+		self._execute("UPDATE Users SET currentWeight = ? WHERE userid = ?", (currentWeight, userid))
+	def getLastTransaction(self, userid):
+		output = self._execute("SELECT lastTransaction FROM Users WHERE userid = ?", (userid,))
 		return output[0][0]
-	def setLastTransaction(self, state):
-		self._execute("UPDATE Users SET lastTransaction = self WHERE state = 4")
+	def setLastTransaction(self, userid, lastTransaction):
+		self._execute("UPDATE Users SET lastTransaction = ? WHERE userid = ?", (lastTransaction, userid,))
