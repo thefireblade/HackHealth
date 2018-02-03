@@ -34,37 +34,39 @@ def index():
 
 				if msgtext and sender:
 					print "Received " + msgtext + " from " + sender
-
-					state = db.getUserState(sender)
-					interface.messageFB(state, sender)
-					print state
-					if(state == -1):
-						db.addUser(sender, 1)
-						interface.messageFB("Hi, what is your weight?", sender)
-					elif state == 1:
-						interface.messageFB("What is your calorie target everyday?", sender)
-						db.setUserState(sender, 2)
-						db.setCurrentWeight(sender, msgtext)
-
-					elif state == 2:
-						db.setUserState(sender, 3)
-						db.setCalorieTarget(sender, msgtext)
-						interface.messageFB("The data is imported!", sender)
-					elif state == 3:
-						db.setUserState(sender, 4)
-						interface.messageFB("Hi, welcome back. Enter the calorie count for your meal:", sender)
+					if(msgtext = "show me the way"):
+						interface.messageFB("The total calorie count for today is :" + calculateTotalCalorie(sender))
 					else:
-						db.setUserState(sender, 3)
-						db.addLog(sender, datetime.now().date().strftime('%m%d%Y'),msgtext)
-						db.setLastTransaction(sender, datetime.now().time().strftime('%H:%M:%S'))
-						interface.messageFB("Food data was logged successfully! See you again next time.", sender)
+						state = db.getUserState(sender)
+						interface.messageFB(state, sender)
+						print state
+						if(state == -1):
+							db.addUser(sender, 1)
+							interface.messageFB("Hi, what is your weight?", sender)
+						elif state == 1:
+							interface.messageFB("What is your calorie target everyday?", sender)
+							db.setUserState(sender, 2)
+							db.setCurrentWeight(sender, msgtext)
 
-					returntext = processor.echo(msgtext)
-					print returntext
+						elif state == 2:
+							db.setUserState(sender, 3)
+							db.setCalorieTarget(sender, msgtext)
+							interface.messageFB("The data is imported!", sender)
+						elif state == 3:
+							db.setUserState(sender, 4)
+							interface.messageFB("Hi, welcome back. Enter the calorie count for your meal:", sender)
+						else:
+							db.setUserState(sender, 3)
+							db.addLog(sender, datetime.now().date().strftime('%m%d%Y'),msgtext)
+							db.setLastTransaction(sender, datetime.now().time().strftime('%H:%M:%S'))
+							interface.messageFB("Food data was logged successfully! See you again next time.", sender)
 
-					interface.messageFB(returntext,sender)
-				elif sender:
-					interface.messageFB("(y)",sender)
+						returntext = processor.echo(msgtext)
+						print returntext
+
+						interface.messageFB(returntext,sender)
+					elif sender:
+						interface.messageFB("(y)",sender)
 
 
 	return ""
