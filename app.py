@@ -20,55 +20,63 @@ def index():
 		response = str(request.args["hub.challenge"])
 		return response
 	data = None
-	if request.data:
-		data = json.loads(request.data)
-		for entry in data["entry"]:
-			for message in entry["messaging"]:
-				msgtext = sender = None
+	if request:
 
-				if "sender" in message and "id" in message["sender"]:
-					sender = message["sender"]["id"]
+		if request.data:
+			data = json.loads(request.data)
+		elif request.form:
+			data = request.form
 
-				if "message" in message and "text" in message["message"]:
-					msgtext = message["message"]["text"]
+		if "X-Hub-Signature" in request.headers:
+			for entry in data["entry"]:
+				for message in entry["messaging"]:
+					msgtext = sender = None
 
-				if msgtext and sender:
-					print "Received " + msgtext + " from " + sender
+					if "sender" in message and "id" in message["sender"]:
+						sender = message["sender"]["id"]
 
-					state = db.getUserState(sender)
-					interface.messageFB(state, sender)
-					print state
-					if(state == -1):
-						db.addUser(sender, 1)
-						interface.messageFB("Hi, what is your weight?", sender)
-					elif state == 1:
-						interface.messageFB("What is your calorie target everyday?", sender)
-						db.setUserState(sender, 2)
-						db.setCurrentWeight(sender, msgtext)
+					if "message" in message and "text" in message["message"]:
+						msgtext = message["message"]["text"]
 
-					elif state == 2:
-						db.setUserState(sender, 3)
-						db.setCalorieTarget(sender, msgtext)
-						interface.messageFB("The data is imported!", sender)
-					elif state == 3:
-						db.setUserState(sender, 4)
-						interface.messageFB("Hi, welcome back. Enter the calorie count for your meal:", sender)
-					else:
-						db.setUserState(sender, 3)
-						db.addLog(sender, datetime.now().date().strftime('%m%d%Y'),msgtext)
-						db.setLastTransaction(sender, datetime.now().time().strftime('%H:%M:%S'))
-						interface.messageFB("Food data was logged successfully! See you again next time.", sender)
+					if msgtext and sender:
+						print "Received " + msgtext + " from " + sender
 
-					returntext = processor.echo(msgtext)
-					print returntext
+						state = db.getUserState(sender)
+						interface.messageFB(state, sender)
+						print state
+						if(state == -1):
+							db.addUser(sender, 1)
+							interface.messageFB("Hi, what is your weight?", sender)
+						elif state == 1:
+							interface.messageFB("What is your calorie target everyday?", sender)
+							db.setUserState(sender, 2)
+							db.setCurrentWeight(sender, msgtext)
 
-					interface.messageFB(returntext,sender)
-				elif sender:
-					interface.messageFB("(y)",sender)
+						elif state == 2:
+							db.setUserState(sender, 3)
+							db.setCalorieTarget(sender, msgtext)
+							interface.messageFB("The data is imported!", sender)
+						elif state == 3:
+							db.setUserState(sender, 4)
+							interface.messageFB("Hi, welcome back. Enter the calorie count for your meal:", sender)
+						else:
+							db.setUserState(sender, 3)
+							db.addLog(sender, datetime.now().date().strftime('%m%d%Y'),msgtext)
+							db.setLastTransaction(sender, datetime.now().time().strftime('%H:%M:%S'))
+							interface.messageFB("Food data was logged successfully! See you again next time.", sender)
 
+						print returntext
+
+						interface.messageFB(returntext,sender)
+					elif sender:
+						interface.messageFB("(y)",sender)
+		elif "source" in data:
+			ifttthadler()
 
 	return ""
 
+def ifttthandler():
+	interface.messageFB("I got ifttt data!")
 
 def calculateTotalCalorie(sender):
 	output = self._execute("SELECT calorieCount FROM FoodData WHERE transactionDate = ?",(dateime.now().date().strftime('%m%d%Y'),))
