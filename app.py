@@ -65,7 +65,7 @@ def index():
 						print returntext
 
 						interface.messageFB(returntext,sender)
-						elif sender:
+					elif sender:
 						interface.messageFB("(y)",sender)
 
 
