@@ -59,12 +59,6 @@ def index():
 						db.setLastTransaction(sender, datetime.now().time().strftime('%H:%M:%S'))
 						interface.messageFB("Food data was logged successfully! See you again next time.", sender)
 
-
-<<<<<<< HEAD
-=======
-					db.addLog(1,"hi",3)
-
->>>>>>> a57592f57acc316b95dd6f35a5475c19e23ffdbe
 					returntext = processor.echo(msgtext)
 					print returntext
 
