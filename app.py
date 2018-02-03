@@ -11,7 +11,7 @@ interface = Interface()
 processor = Processors()
 
 db = interface.database
-with open("config.json") as config_file:    
+with open("config.json") as config_file:
 	config = json.load(config_file)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -36,43 +36,43 @@ def index():
 					print "Received " + msgtext + " from " + sender
 
 					state = db.getUserState(sender)
-
+					interface.messageFB(state, sender)
+					print state
 					if(state == -1):
 						db.addUser(sender, 1)
 						interface.messageFB("Hi, what is your weight?", sender)
 					elif state == 1:
-						db.setUserState(sender, 2)
-						db.setWeight(sender, msgtext)
 						interface.messageFB("What is your calorie target everyday?", sender)
+						db.setUserState(sender, 2)
+						db.setCurrentWeight(sender, msgtext)
+
 					elif state == 2:
 						db.setUserState(sender, 3)
 						db.setCalorieTarget(sender, msgtext)
 						interface.messageFB("The data is imported!", sender)
 					elif state == 3:
 						db.setUserState(sender, 4)
-						interface.messageFB("Hi, welcome back. Enter the calorie count for your meal:")
+						interface.messageFB("Hi, welcome back. Enter the calorie count for your meal:", sender)
 					else:
 						db.setUserState(sender, 3)
-						db.addLog(sender, datetime.now().time(),msgtext)
-						db.setLastTransaction(sender, datetime.now().time())
-						interface.messageFB("Food data was logged successfully! See you again next time.")
+						db.addLog(sender, datetime.now().date().strftime('%m%d%Y'),msgtext)
+						db.setLastTransaction(sender, datetime.now().time().strftime('%H:%M:%S'))
+						interface.messageFB("Food data was logged successfully! See you again next time.", sender)
 
 
-					db.addLog(1,"hi",3)
-				
 					returntext = processor.echo(msgtext)
 					print returntext
 
 					interface.messageFB(returntext,sender)
 				elif sender:
 					interface.messageFB("(y)",sender)
-					
+
 
 	return ""
 
 
-def calculateTotalCalorie(sender): 
-	output = self._execute("SELECT calorieCount FROM FoodData WHERE transactionDate = ?",(dateime.now().day,))
+def calculateTotalCalorie(sender):
+	output = self._execute("SELECT calorieCount FROM FoodData WHERE transactionDate = ?",(dateime.now().date().strftime('%m%d%Y'),))
 	return sum([row[0] for row in output])
 
 

@@ -9,13 +9,14 @@ class AuthDatabase(Database):
 		self._execute("INSERT INTO Users(userId, state) VALUES(?,?);",(userid, state))
 	def getUserState(self, userid):
 		output = self._execute("SELECT state FROM Users WHERE userid = ?",(userid,))
-	def setUserState(self, userid, state):
-		self._execute("UPDATE Users SET state = ? WHERE userid = ?", (state, ))
-	def getCalorieTarget(self, calorieTarget):
 		if(len(output) == 0):
 			return -1
 		else:
 			return output[0][0]
+	def setUserState(self, userid, state):
+		self._execute("UPDATE Users SET state = ? WHERE userid = ?", (state, userid))
+	def getCalorieTarget(self, calorieTarget):
+		pass
 	def setCalorieTarget(self, userid, calorieTarget):
 		self._execute("UPDATE Users SET calorieTarget = ? WHERE userid = ?", (calorieTarget, userid,))
 	def getCurrentWeight(self, userid):
