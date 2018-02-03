@@ -59,7 +59,7 @@ def index():
 
 
 					db.addLog(1,"hi",3)
-					if()
+				
 					returntext = processor.echo(msgtext)
 					print returntext
 
@@ -71,7 +71,7 @@ def index():
 	return ""
 
 
-def calculateTotalCalorie(sender) 
+def calculateTotalCalorie(sender): 
 	output = self._execute("SELECT calorieCount FROM FoodData WHERE transactionDate = ?",(dateime.now().day,))
 	return sum([row[0] for row in output])
 
