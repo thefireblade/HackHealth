@@ -93,7 +93,7 @@ def total(sender):
 	 " of your calorie target", sender )
 	net = calories - target
 	diff = "gained" if net > 0 else "loss"
-	net = net * -1 if net < 0
+	net = net * -1 if net < 0 else net
 	interface.messageFB("You " + diff + " a net of " + str(net) + " calories today. That's " + str(net/3500.0) + "pounds")
 
 def calculateTotalCalorie(sender):
