@@ -43,9 +43,13 @@ def index():
 						msgtext = message["message"]["text"]
 
 				if msgtext and sender:
-					print "Received " + msgtext + " from " + sender
-					if(msgtext == "show me the way"):
+
+					if(msgtext.replace(" ","").lower() == "showmetheway"):
 						total(sender)
+					elif msgtext.replace(" ","").lower() == "deleteme":
+						interface.messageFB("You have been deleted. RIP", sender)
+						db.deleteuser(sender)
+
 					else:
 
 						state = db.getUserState(sender)
@@ -86,15 +90,15 @@ def ifttthandler():
 
 
 def total(sender):
-	calories = str(calculateTotalCalorie(sender))
+	calories = calculateTotalCalorie(sender)
 	target = db.getCalorieTarget(sender)
-	interface.messageFB("The total calorie count for today is : " + calories +  " calories", sender)
+	interface.messageFB("The total calorie count for today is : " + str(calories) +  " calories", sender)
 	interface.messageFB("You ate " + str(round(calories*1.0/target* 100, 2)) + "%" +
 	 " of your calorie target", sender )
 	net = calories - target
 	diff = "gained" if net > 0 else "loss"
 	net = net * -1 if net < 0 else net
-	interface.messageFB("You " + diff + " a net of " + str(net) + " calories today. That's " + str(net/3500.0) + "pounds")
+	interface.messageFB("You " + diff + " a net of " + str(net) + " calories today. That's " + str(round(net/3500.0,2)) + " pounds", sender)
 
 def calculateTotalCalorie(sender):
 	output = interface.database._execute("SELECT calorieCount FROM FoodData WHERE transactionDate = ?",(datetime.now().date().strftime('%m%d%Y'),))

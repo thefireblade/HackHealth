@@ -36,3 +36,6 @@ class AuthDatabase(Database):
 
 	def getAllUsers(self):
 		return self._execute("SELECT userid FROM Users")
+	def deleteuser(self,userid):
+		self._execute("DELETE FROM Users WHERE userid = ?",(userid,))
+		self._execute("DELETE FROM FoodData WHERE userid=?",(userid,))
