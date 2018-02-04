@@ -44,14 +44,12 @@ def index():
 
 				if msgtext and sender:
 
-					if(msgtext.replace(" ","").lower() == "showmetheway"):
+					if((msgtext.replace(" ","").lower() == "showmetheway") or (msgtext.replace(" ","").lower() == "doyouknowdewey")):
 						total(sender)
 					elif msgtext.replace(" ","").lower() == "deleteme":
 						interface.messageFB("You have been deleted. RIP", sender)
 						db.deleteuser(sender)
-
 					else:
-
 						state = db.getUserState(sender)
 						if(state == -1):
 							db.addUser(sender, 1)
@@ -64,7 +62,7 @@ def index():
 						elif state == 2:
 							db.setUserState(sender, 3)
 							db.setCalorieTarget(sender, msgtext)
-							interface.messageFB("The data is imported!", sender)
+							interface.messageFB("Got it! Message me when you eat a meal. I'll check in with you every night and help you track your progress", sender)
 						elif state == 3:
 							db.setUserState(sender, 4)
 							interface.messageFB("Hi, welcome back. Enter the calorie count for your meal:", sender)
@@ -75,7 +73,7 @@ def index():
 							interface.messageFB("Food data was logged successfully! See you again next time.", sender)
 				elif sender:
 					interface.messageFB("(y)",sender)
-		elif "source" in data:
+		else:
 			ifttthandler()
 
 
@@ -101,7 +99,7 @@ def total(sender):
 	interface.messageFB("You " + diff + " a net of " + str(net) + " calories today. That's " + str(round(net/3500.0,2)) + " pounds", sender)
 
 def calculateTotalCalorie(sender):
-	output = interface.database._execute("SELECT calorieCount FROM FoodData WHERE transactionDate = ?",(datetime.now().date().strftime('%m%d%Y'),))
+	output = interface.database._execute("SELECT calorieCount FROM FoodData WHERE transactionDate = ? AND userid = ?",(datetime.now().date().strftime('%m%d%Y'), sender))
 	return sum([row[0] for row in output])
 
 
