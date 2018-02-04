@@ -89,7 +89,7 @@ def total(sender):
 	calories = str(calculateTotalCalorie(sender))
 	target = db.getCalorieTarget(sender)
 	interface.messageFB("The total calorie count for today is : " + calories +  " calories", sender)
-	interface.messageFB("You ate " + str(round(calories/target* 100, 2)) + "%" +
+	interface.messageFB("You ate " + str(round(calories*1.0/target* 100, 2)) + "%" +
 	 " of your calorie target", sender )
 	net = calories - target
 	diff = "gained" if net > 0 else "loss"
